@@ -39,9 +39,3 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
-// 컨트롤러 파라미터 이름(@PathVariable, @RequestParam 등)을 바이트코드에 유지
-// VSCode(Eclipse JDT) 빌드에서도 -parameters 플래그가 적용되도록 명시
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs << '-parameters'
-}

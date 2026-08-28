@@ -16,12 +16,22 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping()
-    public void search(@RequestParam String keyword) {
+    public void search(@RequestParam("keyword") String keyword) {
         searchService.search(keyword);
     }
 
     @GetMapping("/top10")
     public List<String> getTop10Keywords() {
         return searchService.getTop10Keywords();
+    }
+
+    @GetMapping("/redis")
+    public void searchWithRedis(@RequestParam(name="keyword") String keyword) {
+        searchService.searchWithRedis(keyword);
+    }
+
+    @GetMapping("/top10/redis")
+    public List<String> getTop10KeywordsRedis() {
+        return searchService.getTop10KeywordsWithRedis();
     }
 }
