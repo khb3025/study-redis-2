@@ -2,11 +2,16 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export const options = {
-  // 가상 유저(VUs) 100명으로 설정
-  vus: 100,
-
-  // 테스트를 10초 동안 진행
-  duration: '10s',
+  scenarios:{
+    stockDecrease:{
+      executor: 'ramping-vus',
+      startVUs: 0,
+      stages: [
+        { target: 100, duration: '10s' } // 가상 유저(VUs) 100명으로 설정 / 테스트를 10초 동안 진행
+      ],
+      gracefulRampDown : '40s' // 지연으로 인한 VUS 감소 시간 설정
+    }
+  }
 };
 
 export default function () {

@@ -17,7 +17,7 @@ public class LikeScheduler {
     private final RedisTemplate<String, String> redisTemplate;
     private final LikeRepository likeRepository;
 
-    @Scheduled(fixedDelay = 1000)
+    // @Scheduled(fixedDelay = 1000)
     public void saveLikesToDb(){
         List<Like> likeToSave = new ArrayList<>();
         while(true){
