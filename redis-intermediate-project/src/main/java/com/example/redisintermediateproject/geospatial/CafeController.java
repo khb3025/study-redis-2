@@ -20,9 +20,9 @@ public class CafeController {
 
     // 특정 위치를 기준으로 지정된 반경 내에 있는 카페를 조회해주는 API
     @GetMapping("/nearby")
-    public List<Object> findCafesNearby(@RequestParam double longitude,
-                                        @RequestParam double latitude,
-                                        @RequestParam double distance) {
+    public List<Object> findCafesNearby(@RequestParam("longitude") double longitude,
+                                        @RequestParam("latitude") double latitude,
+                                        @RequestParam("distance") double distance) {
         return cafeService.findCafesNearby(longitude, latitude, distance);
     }
 }

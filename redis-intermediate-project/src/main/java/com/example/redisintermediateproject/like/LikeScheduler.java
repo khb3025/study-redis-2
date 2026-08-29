@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+// @Component
 @RequiredArgsConstructor
 @Slf4j
 public class LikeScheduler {
     private final RedisTemplate<String, String> redisTemplate;
     private final LikeRepository likeRepository;
 
-    // @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 1000)
     public void saveLikesToDb(){
         List<Like> likeToSave = new ArrayList<>();
         while(true){
