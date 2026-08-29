@@ -2,6 +2,10 @@ package com.example.redisintermediateproject.dau;
 
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DailyActiveUserService {
 
   private final DailyActiveUserRepository dailyActiveUserRepository;
-
+  private final RedisTemplate<String, String> redisTemplate;
   @Transactional
   public void recordActiveUser(Long userId) {
     LocalDate today = LocalDate.now();
@@ -26,4 +30,40 @@ public class DailyActiveUserService {
     // 특정 날짜의 DAU를 SQL문의 COUNT를 활용해 계산
     return dailyActiveUserRepository.countByActiveDate(date);
   }
+
+  public void recordActiveUserWithRedis(Long userId) {
+    LocalDate today = LocalDate.now();
+    redisTemplate
+      .opsForSet()
+      .add("dau:"+ today.toString(), userId.toString());
+      
+  }
+
+  public Long getDauWithRedis(LocalDate date) {
+    return redisTemplate
+        .opsForSet()
+        .size("dau:"+ date.toString());
+  }
+
+  public void recordActiveUserWithBitmapRedis(Long userId) {
+    LocalDate today = LocalDate.now();
+    redisTemplate
+      .opsForValue().setBit(
+        "dau:"+ today.toString(),
+        userId,
+        true
+      );
+      
+  }
+
+  public Long getDauWithBitmapRedis(LocalDate date) {
+    String key = "dau:"+ date.toString();
+    return redisTemplate
+        .execute(
+          (RedisCallback<Long>) (RedisConnection connection) -> {
+            // RedisConnection 직접 호출은 deprecated → 명령어 그룹(stringCommands)으로 위임
+            return connection.stringCommands().bitCount(key.getBytes());
+        });
+  }
+  
 }

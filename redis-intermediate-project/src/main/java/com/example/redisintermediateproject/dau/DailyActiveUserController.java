@@ -28,10 +28,46 @@ public class DailyActiveUserController {
   // DAU 조회 API
   @GetMapping("/count")
   public long getDau(
-      @RequestParam
+      @RequestParam("date")
       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
       LocalDate date
   ) {
     return dailyActiveUserService.getDau(date);
+  }
+
+  // 활동 유저 기록 Redis API
+  @PostMapping("/record/redis")
+  public void recordActiveUserWithRedis(
+      @RequestBody RecordActiveUserRequestDto recordActiveUserRequestDto
+  ) {
+    dailyActiveUserService.recordActiveUserWithRedis(recordActiveUserRequestDto.getUserId());
+  }
+
+  // DAU 조회 Redis API
+  @GetMapping("/count/redis")
+  public long getDauWithRedis(
+      @RequestParam("date")
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+      LocalDate date
+  ) {
+    return dailyActiveUserService.getDauWithRedis(date);
+  }
+
+    // 활동 유저 기록 Redis API
+  @PostMapping("/record/bitmap/redis")
+  public void recordActiveUserWithBitmapRedis(
+      @RequestBody RecordActiveUserRequestDto recordActiveUserRequestDto
+  ) {
+    dailyActiveUserService.recordActiveUserWithBitmapRedis(recordActiveUserRequestDto.getUserId());
+  }
+
+  // DAU 조회 Redis API
+  @GetMapping("/count/bitmap/redis")
+  public long getDauWithBitmapRedis(
+      @RequestParam("date")
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+      LocalDate date
+  ) {
+    return dailyActiveUserService.getDauWithBitmapRedis(date);
   }
 }
